@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>
+
+    <context:component-scan base-package="com.bluewise.controllers" />
+
+    <mvc:resources location="/images/" mapping="/images/**" />
+    <mvc:resources location="/css/" mapping="/css/**" />
+    <mvc:resources location="/AdminEx/" mapping="/AdminEx/**" />
+
+    <!-- thymeleaf的视图解析器 -->
+    <!-- Thymeleaf View Resolver - implementation of Spring's ViewResolver interface -->
+    <bean id="viewResolver" class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
+        <property name="characterEncoding" value="UTF-8" />
+        <property name="viewNames" value="html/*" />
+        <property name="order" value="2"/>
+    </bean>
+
+    <!-- 配置SpringMVC的视图解析器 -->
+    <!--<bean class="org.springframework.web.servlet.view.RedirectView .InternalResourceViewResolver">-->
+    <bean id="jspResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="viewNames" value="jsp/*" />
+        <property name="order" value="1"/>
+    </bean>
+
+    <!-- Thymeleaf Template Engine (Spring4-specific version) -->
+    <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <property name="templateResolvers">
+            <set>
+                <ref bean="templateResolver" />
+            </set>
+        </property>
+    </bean>
+
+    <!-- Thymeleaf Template Resolver -->
+    <bean id="templateResolver" class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
+        <property name="prefix" value="/WEB-INF/" />
+        <property name="suffix" value=".html" />
+        <property name="templateMode" value="HTML" />
+        <!--<property name="order" value="0"/>-->
+    </bean>
+
+
+    <!--<bean id="templateResolver"-->
+          <!--class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">-->
+        <!--<property name="prefix" value="/WEB-INF/html/" />-->
+        <!--<property name="suffix" value=".html" />-->
+        <!--<property name="templateMode" value="HTML5" />-->
+    <!--</bean>-->
+    <!--<bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">-->
+        <!--<property name="templateResolver" ref="templateResolver" />-->
+    <!--</bean>-->
+    <!--<bean id="viewResolverThymeleaf" class="org.thymeleaf.spring4.view.ThymeleafViewResolver">-->
+        <!--<property name="templateEngine" ref="templateEngine" />-->
+        <!--<property name="characterEncoding" value="utf-8"/>-->
+        <!--<property name="order" value="0"/>-->
+        <!--<property name="cache" value="false"/>-->
+    <!--</bean>-->
+
+    <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+        <!--<property name="prefix" value="/WEB-INF/jsp"/>-->
+        <!--<property name="suffix" value=".jsp"/>-->
+        <!--<property name="viewNames" value="jsps/*"/>-->
+        <!--<property name="order" value="1"/>-->
+        <!--<property name="cache" value="false"/>-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash;国际化资源处理包&ndash;&gt;-->
+    <!--&lt;!&ndash;<bean id="messageSource"&ndash;&gt;-->
+    <!--&lt;!&ndash;class="org.springframework.context.support.ResourceBundleMessageSource"> <property name="basename" value="Messages" />&ndash;&gt;-->
+    <!--&lt;!&ndash;</bean>&ndash;&gt;-->
+
+
+    <!--<bean id="templateResolver"-->
+          <!--class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">-->
+        <!--<property name="prefix" value="/WEB-INF/view/" />-->
+        <!--<property name="suffix" value=".html" />-->
+        <!--<property name="templateMode" value="HTML5" />-->
+        <!--&lt;!&ndash; Template cache is set to false (default is true).        &ndash;&gt;-->
+    <!--</bean>-->
+
+    <!--<bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">-->
+        <!--<property name="templateResolver" ref="templateResolver" />-->
+    <!--</bean>-->
+
+</beans>

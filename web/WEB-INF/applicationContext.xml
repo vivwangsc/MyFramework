@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+    <!-- 启用注解 -->
+    <context:annotation-config />
+
+    <!-- 启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描 -->
+    <context:component-scan base-package="com.bluewise.services">
+    <context:exclude-filter type="annotation"
+    expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+    <list>
+    <value>classpath:dbconfig.properties</value>
+    </list>
+    </property>
+    </bean>
+
+    <!-- 定义实体管理器工厂
+    Jpa配置   LocalContainerEntityManagerFactoryBean这个选项Spring扮演了容器的角色。完全掌管JPA
+    点我查看 spring生成EntityManagerFactory的三种方式 -->
+    <!-- Hibernate对Jpa的实现 -->
+    <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <!-- 指定数据源 -->
+    <property name="dataSource" ref="dataSource"/>
+    <!-- 指定Jpa持久化实现厂商类,这里以Hibernate为例 -->
+    <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
+    <!-- 指定Entity实体类包路径 -->
+    <property name="packagesToScan" >
+    <array>
+    <value>com.bluewise.entitys</value>
+    </array>
+    </property>
+    <!-- 指定JPA属性；如Hibernate中指定是否显示SQL的是否显示、方言等 -->
+    <property name="jpaProperties">
+    <props>
+    <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+    <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+    <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+    <prop key="hibernate.show_sql">false</prop>
+    <prop key="hibernate.format_sql">false</prop>
+    <prop key="hibernate.hbm2ddl.auto">validate</prop>
+    </props>
+    </property>
+    </bean>
+
+    <!-- Jpa 事务管理器  -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <!-- 重要配置：启用扫描并自动创建代理的功能  -->
+    <jpa:repositories base-package="com.bluewise"  transaction-manager-ref="transactionManager" entity-manager-factory-ref="entityManagerFactory"/>
+
+    <!-- 开启注解事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+
+    <!--<bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+    <!--<property name="dataSource" ref="dataSource"></property>-->
+    <!--</bean>-->
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    <property name="dataSource">
+    <ref bean="dataSource" />
+    </property>
+    </bean>
+
+    <!-- 阿里 druid数据库连接池 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+    <!-- 数据库基本信息配置 -->
+    <property name="url" value="${url}" />
+    <property name="username" value="${username}" />
+    <property name="password" value="${password}" />
+    <property name="driverClassName" value="${driverClassName}" />
+    <property name="filters" value="${filters}" />
+    <!-- 最大并发连接数 -->
+    <property name="maxActive" value="${maxActive}" />
+    <!-- 初始化连接数量 -->
+    <property name="initialSize" value="${initialSize}" />
+    <!-- 配置获取连接等待超时的时间 -->
+    <property name="maxWait" value="${maxWait}" />
+    <!-- 最小空闲连接数 -->
+    <property name="minIdle" value="${minIdle}" />
+    <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+    <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
+    <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+    <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />
+    <property name="validationQuery" value="${validationQuery}" />
+    <property name="testWhileIdle" value="${testWhileIdle}" />
+    <property name="testOnBorrow" value="${testOnBorrow}" />
+    <property name="testOnReturn" value="${testOnReturn}" />
+    <property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements}" />
+    <!-- 打开removeAbandoned功能 -->
+    <property name="removeAbandoned" value="${removeAbandoned}" />
+    <!-- 1800秒，也就是30分钟 -->
+    <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout}" />
+    <!-- 关闭abanded连接时输出错误日志 -->
+    <property name="logAbandoned" value="${logAbandoned}" />
+    </bean>
+
+</beans>

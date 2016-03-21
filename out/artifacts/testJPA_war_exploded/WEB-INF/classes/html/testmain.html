@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="hello" type="String"*/-->
+<head>
+    <title th:text="${hello}">Thymeleaf 3 + Spring 4444 example</title>
+    <meta charset="utf-8"/>
+    <script th:text="${obj} ">
+        var i ;
+    </script>
+</head>
+<body>
+<h1 th:object="${hello}">Thymeleaf 3 + Spring 4444 example</h1>
+<img src="/images/TB1ApO7LVXXXXcaXXXXXXXXXXXX-520-280.jpg"/>
+<img src="/images/TB1BAZFKVXXXXbzXVXXSutbFXXX.jpg"/>
+<p id="ftest">
+    Hello <!--/*@thymesVar id="hello" type=""*/-->
+    <span th:text="${hello}">Peter</span><br/>
+    Hello <span th:text="${hello}">Peter</span><br/>
+</p>
+//测试对象列表数据的迭代,下一步应该使用json继续测试¡¡™¡
+<table>
+    <tr>
+        <th>名称</th>
+        <th>电子邮件</th>
+    </tr>
+    <!--/*@thymesVar id="emps" type="List<com.bluewise.entitys.EmployeesEntity>"*/-->
+    <!--/*@thymesVar id="emp" type="com.bluewise.entitys.EmployeesEntity"*/-->
+    <tr th:each="emp:${emps}">
+        <td th:text="${emp.firstName}"> 王顺初</td>
+        <td th:text="${emp.email}"> vivwangsc@163.com</td>
+    </tr>
+</table>
+//测试ajax方面的东西
+<div id="json"></div>
+<div th:switch="${var1}">
+    <p th:case="1">条件1</p>
+    <p th:case="2">条件2</p>
+    <p th:case="3">条件3</p>
+    <p th:case="4">条件4</p>
+    <p th:if="${var1}>3">测试条件</p>
+
+</div>
+<div th:replace="testmain1::#zzzz">zzgod</div>
+</body>
+</html>
